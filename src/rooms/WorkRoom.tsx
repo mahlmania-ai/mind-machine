@@ -1,3 +1,4 @@
+import {briefHref} from '../registry';
 import { useEffect, useState } from 'react';
 import { workCases, type WorkCase } from './workCases';
 import './work-services.css';
@@ -42,7 +43,7 @@ export function WorkRoom() {
     <article className="folio-case-study" id="case-study" tabIndex={-1} aria-labelledby="case-study-title">
       <div className="folio-case-top"><div className="folio-case-lead"><p className="folio-kicker">{selected.eyebrow}</p><h2 id="case-study-title">{selected.name}</h2><h3>{selected.title}</h3><p>{selected.summary}</p><span className="folio-status"><span aria-hidden="true"/> Selected professional work</span></div><ScopeMap project={selected} /></div>
       <div className="folio-case-body"><section><span className="folio-detail-number">01 / CONTEXT</span><h3>Where it began.</h3><p>{selected.context}</p></section><section><span className="folio-detail-number">02 / APPROACH</span><h3>How the pieces connected.</h3><p>{selected.approach}</p></section><section><span className="folio-detail-number">03 / WORK DELIVERED</span><h3>What took shape.</h3><p>{selected.delivery}</p></section></div>
-      <div className="folio-role"><div><p className="folio-kicker">MY ROLE</p><p>{selected.role}</p></div><a className="folio-button" href={`/services/?interest=${encodeURIComponent(selected.name)}#brief`}>Discuss a similar project <Arrow /></a></div>
+      <div className="folio-role"><div><p className="folio-kicker">MY ROLE</p><p>{selected.role}</p></div><a className="folio-button" href={briefHref(selected.id)}>Discuss a similar project <Arrow /></a></div>
       <div className="folio-takeaway"><span aria-hidden="true">↳</span><p>{selected.takeaway}</p></div>
     </article>
     <section className="folio-next" aria-labelledby="work-next-title"><div><p className="folio-kicker">THE THREAD CONTINUES</p><h2 id="work-next-title">New tools.<br/><em>The same curiosity.</em></h2></div><div><p>Current explorations connect research, software, storytelling and physical spaces. Each has its own stage of development.</p><div className="folio-next-links"><a href="/history/">Historical engine <Arrow /></a><a href="/media/">Media & storytelling <Arrow /></a><a href="/floor/">The Floor · a developing vision <Arrow /></a></div></div></section>

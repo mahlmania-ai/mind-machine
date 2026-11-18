@@ -1,10 +1,12 @@
+import {record} from '../registry';
 import { useRef, useState, type FormEvent } from 'react';
 import './work-services.css';
 
 const Arrow = () => <span aria-hidden="true">↗</span>;
 const needs = ['Strategy & direction', 'Brand & digital experience', 'Workflows & automation', 'History, media & storytelling', 'Let’s work it out together'];
 const initialInterest = () => {
-  const value = new URLSearchParams(window.location.search).get('interest');
+  const params=new URLSearchParams(window.location.search);
+  const value=record(params.get('project'))?.name || params.get('interest');
   return value && value.length <= 150 ? value : '';
 };
 

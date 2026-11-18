@@ -13,8 +13,14 @@ function RestoreAnchor(){
  },[]);
  return null;
 }
+const Eden=lazy(()=>import('./Integration').then(m=>({default:m.Eden})));
+const Conducting=lazy(()=>import('./Integration').then(m=>({default:m.Conducting})));
+const TradingReference=lazy(()=>import('./Integration').then(m=>({default:m.TradingReference})));
 function Room({slug}:{slug:string}){
  switch(slug){
+  case 'eden':return <Eden/>;
+  case 'conducting':return <Conducting/>;
+  case 'trading-reference':return <TradingReference/>;
   case 'explore':return <Explore/>;
   case 'machine':return <Machine/>;
   case 'markets':return <Markets/>;
@@ -40,5 +46,5 @@ export default function RoomShell({slug}:{slug:string}){
   return()=>{document.removeEventListener('keydown',onKey);document.removeEventListener('pointerdown',outside)};
  },[name]);
  return <div className="mm-shell"><a className="skip-link" href="#screen">Skip to screen</a><header className="mm-top"><a className="mm-brand" href="/" aria-label="Mahlmania homepage">mahlmania<i>.ai</i></a><nav className="mm-topnav" aria-label="Site navigation"><a href="/explore/" aria-current={slug==='explore'?'page':undefined}>Explore</a><a href="/machine/" aria-current={slug==='machine'?'page':undefined}>Machine</a><a href="/work/" aria-current={slug==='work'?'page':undefined}>Work</a><details ref={switcher} className="mm-switch"><summary>All screens ▾</summary><div className="mm-switch-panel"><a href="/explore/">Screen directory</a>{screens.map(s=><a key={s.slug} href={screenHref(s.slug)} aria-current={s.slug===slug?'page':undefined}>{s.name}</a>)}</div></details></nav></header>
- <div id="screen" tabIndex={-1}><Suspense fallback={<p className="mm-page" role="status">Opening {name}…</p>}><Room slug={slug}/><RestoreAnchor/></Suspense></div><footer className="mm-foot"><a href="/explore/">← All screens</a><a href="/guide/">Site guide</a><a href="/about/">About & contact ↗</a></footer></div>
+ <div id="screen" tabIndex={-1}><Suspense fallback={<p className="mm-page" role="status">Opening {name}…</p>}><Room slug={slug}/><RestoreAnchor/></Suspense></div><footer className="mm-foot"><a href="/explore/">← All screens</a>{slug==='machine'&&<a href='/conducting/'>Machine teams ↗</a>}{slug==='markets'&&<a href='/trading-reference/'>tastytrade screen library ↗</a>}<a href='/compare/'>Compare styles</a><a href='/guide/'>Site guide</a><a href="/about/">About & contact ↗</a></footer></div>
 }

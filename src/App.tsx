@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ComponentType, type FormEvent } from 'react';
+import {record,briefHref,evidenceHref} from './registry';
 import Garden from './Garden';
 import SplitText from './components/SplitText';
 import { projects, type Project } from './projects';
@@ -35,7 +36,8 @@ function ProjectDialog({ project, onClose }: { project: Project | null; onClose:
       <p>{project.description}</p>
       <div className="role-block"><span className="eyebrow">MY ROLE / THE CONTEXT</span><p>{project.role}</p></div>
       <div className="tags">{project.tags.map(t => <span key={t}>{t}</span>)}</div>
-      <a className="button primary" href={`mailto:chris@mahlmania.ai?subject=${encodeURIComponent(`Let's talk about ${project.name}`)}`}>Start a conversation <Arrow /></a>
+      {record(project.id)?.caseId && <a className="button outline" href={evidenceHref(record(project.id)!)}>View case study <Arrow /></a>}
+      <a className="button primary" href={briefHref(project.id)}>Start a related brief <Arrow /></a>
     </div>}
   </dialog>;
 }
@@ -123,7 +125,7 @@ export default function App() {
         {selectedIdea === 'history' && <svg className="idea-trace" width="100%" height="100%" aria-hidden="true"><line x1="100%" y1="0" x2="0" y2="100%"/><circle cx="0" cy="100%" r="5"/></svg>}
         <article id="idea-preview" className={`idea-preview preview-${selectedIdea}`} aria-live="polite" aria-atomic="true">
           <img className="idea-thumbnail" src={selectedIdea === 'history' ? '/history-preview.jpg' : '/eden.jpg'} alt={selectedIdea === 'history' ? 'Illustrative interior from the creative concept' : 'Illustrated cosmic garden concept'} />
-          <div className="idea-preview-copy"><h2>{selected.title}</h2><p>{selected.subtitle}</p><a className="v3-primary" href={'/'+selected.id+'/'}>Explore project <Arrow /></a></div>
+          <div className="idea-preview-copy"><h2>{record(selected.project)?.name || selected.title}</h2><p>{selected.subtitle}</p><a className="v3-primary" href={record(selected.project)?.destination || '/explore/'}>Explore project <Arrow /></a></div>
         </article>
         <form className="idea-brief" onSubmit={submitIdea}>
           <ChatIcon /><label className="sr-only" htmlFor="idea-draft">What are you imagining?</label><input id="idea-draft" value={draft} onChange={e => setDraft(e.target.value)} placeholder="What are you imagining?" autoComplete="off" /><button type="submit" aria-label="Shape your project brief"><span aria-hidden="true">→</span></button>

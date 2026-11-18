@@ -12,7 +12,7 @@ if (!html.includes(manifest)) throw new Error('Missing Atlas web manifest');
 await writeFile(atlasIndex, html.replace(manifest, manifest + ' crossorigin="use-credentials"'));
 await rename('atlas/dist', 'dist/atlas');
 
-const rooms = { explore:'Explore', machine:'Machine', markets:'Markets', floor:'The Floor', work:'Selected work', services:'Services', history:'Historical engine', media:'Media & publishing', software:'Software', dashboard:'My dashboard', about:'About & contact', guide:'Site guide' };
+const rooms = { eden:'Idea canvas', conducting:'Machine teams', 'trading-reference':'Trading screen library', explore:'Explore', machine:'Machine', markets:'Markets', floor:'The Floor', work:'Selected work', services:'Services', history:'Historical engine', media:'Media & publishing', software:'Software', dashboard:'My dashboard', about:'About & contact', guide:'Site guide' };
 const shell = await readFile('dist/index.html','utf8');
 for (const [slug, name] of Object.entries(rooms)) {
   await mkdir('dist/'+slug,{recursive:true});
