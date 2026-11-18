@@ -22,10 +22,15 @@ await edit('src/standalone/catalog.js', [
 await edit('src/standalone/tools.js', [
   ['    ...options,\n    voice:', '    ...options,\n    library: { ...options?.library, requireCatalog: true },\n    voice:'],
   ["      supportedProviders: ['openai', 'gemini'],\n      panel: true,\n", ''],
-  ['      ...options?.voice,', '      ...options?.voice,\n      supportedProviders: [],\n      panel: false,'],
+  ['      ...options?.voice,', '      ...options?.voice,\n      enabled: false,\n      panel: false,'],
+]);
+await edit('src/voice/gevRealtime.js', [
+  ["import { createVoiceCommands } from './commands.js';", "import { createVoiceCommands } from './commands.js';\nimport { createHostedVoiceCommands } from './hostedCommands.js';"],
+  ['export function initGevVoiceCommands(options) {', 'export function initGevVoiceCommands(options) {\n  if (options.enabled === false) return createHostedVoiceCommands(options, createGevActionRunner);'],
 ]);
 await edit('src/ui/applicationShell.js', [
   ['    const receiver = this.services.localAdsbLayer?.receiver;', '    // Hosted Atlas does not bind local hardware receiver controls.\n    const receiver = null;'],
 ]);
 await fs.copyFile(path.join(root, 'hostedScope.js'), path.join(source, 'src/standalone/hostedScope.js'));
+await fs.copyFile(path.join(root, 'hostedVoice.js'), path.join(source, 'src/voice/hostedCommands.js'));
 console.log('Applied hosted civil catalog, unavailable-source guards and required Data Library catalog.');
