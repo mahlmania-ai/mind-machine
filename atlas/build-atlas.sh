@@ -21,7 +21,7 @@ tar -xzf "$ARCHIVE" --strip-components=1 \
 rm "$ARCHIVE"
 node verify-artifact.mjs lock "$SOURCE/package-lock.json"
 node verify-artifact.mjs branding "$ROOT/branding.patch"
-(cd "$SOURCE" && patch --batch --forward -p1 -i "$ROOT/branding.patch")
+node "$ROOT/apply-branding.mjs" "$SOURCE"
 node "$ROOT/apply-hosted-scope.mjs" "$SOURCE"
 cp "$ROOT/vite.visual.config.mjs" "$SOURCE/vite.visual.config.mjs"
 
