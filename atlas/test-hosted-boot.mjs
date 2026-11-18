@@ -5,12 +5,15 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 import { createHostedVoiceCommands } from './hostedVoice.js';
+import { restrictHostedVoiceRunner } from '../lib/atlas-voice/policy.js';
 const source = path.resolve(process.argv[2] || '.atlas-build/source');
 const { supportedVoiceProviders } = await import(pathToFileURL(path.join(source, 'src/voice/providerCapabilities.js')));
+const { createProviderCommands } = await import(pathToFileURL(path.join(source, 'src/voice/providerCommands.js')));
 const noop = () => {};
 const cleanup = () => noop;
 let providerConstructions = 0;
 let runnerDisposals = 0;
+let sessionStarts = 0;
 let viewsRun;
 const runnerFactory = () => Object.assign(async (name) => ({ ok: true, name }), { dispose() { runnerDisposals++; } });
 
@@ -19,13 +22,24 @@ function evaluate(code, name, dependencies) {
 }
 const voiceSource = await fs.readFile(path.join(source, 'src/voice/gevRealtime.js'), 'utf8');
 const initVoice = evaluate(voiceSource.slice(voiceSource.indexOf('export function initGevVoiceCommands')).replace(/^export /, ''), 'initGevVoiceCommands', {
-  createHostedVoiceCommands, createGevActionRunner: runnerFactory,
+  createHostedVoiceCommands, restrictHostedVoiceRunner, createGevActionRunner: runnerFactory,
   canvasOf: () => null, cameraPoseKey: () => null, createReferentRegistry: () => ({}),
   withToolCatalog: runner => runner,
   createVoiceCommands(options) {
     providerConstructions++;
     supportedVoiceProviders(options.supportedProviders, { openai: noop, gemini: noop });
-    throw new Error('A hosted boot must never construct a voice provider');
+    return createProviderCommands(options, {
+      factories: { openai: noop, gemini: noop },
+      storage: { getItem: () => 'gemini', setItem: noop },
+      bind(settings) {
+        assert.equal(settings.provider, 'openai');
+        return { session: {
+          state: 'idle', adapter: { getStartOptions: () => ({}) },
+          start: () => { sessionStarts++; }, stop: noop, destroy: noop,
+          isActive: () => false, sendText: noop, sendMapEvent: noop,
+        } };
+      },
+    });
   },
 });
 const removeImports = code => code.replace(/^import[\s\S]*?;\n/gm, '').replace(/^export /gm, '');
@@ -82,4 +96,43 @@ await fixed.destroy();
 assert.equal(fixed.getState().status, 'destroyed');
 assert.equal(runnerDisposals - disposalBefore, 1, 'local runner is disposed exactly once');
 assert.equal(window.__godsEyeView, undefined, 'application debug handle is cleaned');
-console.log('PASS: reproduced empty-provider failure; corrected real application/tools lifecycle reaches ready, preserves local actions and cleans up without constructing a provider.');
+
+const enabled = start({ supportedProviders: ['openai'], panel: true });
+const enabledParts = await enabled.start();
+assert.equal(enabled.getState().status, 'ready');
+assert.deepEqual(enabledParts.tools.voiceCommands.supportedProviders, ['openai']);
+assert.equal(enabledParts.tools.voiceCommands.provider, 'openai', 'old Gemini preference cannot change provider');
+assert.equal(sessionStarts, 0, 'boot mounts controls but never starts microphone/API session');
+assert.equal((await viewsRun('zoom_to_globe', {})).ok, true);
+assert.equal((await viewsRun('control_cctv', {})).ok, false);
+assert.equal((await viewsRun('set_layer_visibility', { layerId: 'military', enabled: true })).ok, false);
+await enabled.destroy();
+assert.equal(enabled.getState().status, 'destroyed');
+assert.equal(enabledParts.tools.voiceCommands.disposed, true);
+
+// The patched original backend uses the protected POST route and exchanges
+// only an ephemeral credential with the fixed OpenAI WebRTC endpoint.
+const { createRealtimeBackend } = await import(pathToFileURL(path.join(source, 'src/voice/realtimeBackend.js')));
+let tokenRequests = 0;
+const backend = createRealtimeBackend({
+  tokenTransport: async (url, options) => {
+    tokenRequests++;
+    assert.equal(url, '/api/realtime/token?tier=mini');
+    assert.equal(options.method, 'POST');
+    assert.equal(options.credentials, 'same-origin');
+    assert.equal(options.headers['X-Atlas-Voice'], '1');
+    return new Response(JSON.stringify({ value: 'ek_backend_test', expires_at: Date.now() / 1000 + 60, session: { model: 'gpt-realtime-2.1-mini' } }));
+  },
+  connectionTransport: async (url, options) => {
+    assert.equal(url, 'https://api.openai.com/v1/realtime/calls');
+    assert.equal(options.headers.Authorization, 'Bearer ek_backend_test');
+    assert.equal(options.body, 'unit-test-offer');
+    return new Response('unit-test-answer');
+  },
+});
+const credential = await backend.requestToken({ tier: 'mini', authMode: 'oauth' });
+assert.equal(tokenRequests, 1);
+assert.equal(await backend.negotiate({ offerSdp: 'unit-test-offer', credential }), 'unit-test-answer');
+const { readStoredCloudVoiceAuthMode } = await import(pathToFileURL(path.join(source, 'src/voice/cloudVoiceAuth.js')));
+assert.equal(readStoredCloudVoiceAuthMode({ getItem: () => 'oauth' }), 'api-key');
+console.log('PASS: original application/provider lifecycle mounts OpenAI-only controls without starting a session; civil actions, shutdown and original WebRTC token/SDP contract pass.');

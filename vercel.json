@@ -10,7 +10,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/ https://tile.openstreetmap.org/ https://terrain.reearth.land/cesium-mesh/ellipsoid/ https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/ https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/; connect-src 'self' data: blob: https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/ https://tile.openstreetmap.org/ https://terrain.reearth.land/cesium-mesh/ellipsoid/ https://earthquake.usgs.gov/earthquakes/feed/ https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/ https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/; worker-src 'self' blob:; media-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/ https://tile.openstreetmap.org/ https://terrain.reearth.land/cesium-mesh/ellipsoid/ https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/ https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/; connect-src 'self' data: blob: https://api.openai.com/v1/realtime/calls https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/ https://tile.openstreetmap.org/ https://terrain.reearth.land/cesium-mesh/ellipsoid/ https://earthquake.usgs.gov/earthquakes/feed/ https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/ https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/; worker-src 'self' blob:; media-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
         },
         {
           "key": "X-Content-Type-Options",
@@ -22,7 +22,7 @@
         },
         {
           "key": "Permissions-Policy",
-          "value": "usb=(), serial=(), camera=(), microphone=()"
+          "value": "usb=(), serial=(), camera=(), microphone=(self)"
         }
       ]
     }
@@ -88,6 +88,9 @@
   "functions": {
     "api/weather.js": {
       "maxDuration": 30
+    },
+    "api/realtime/token.js": {
+      "maxDuration": 20
     }
   }
 }

@@ -24,6 +24,7 @@ node verify-artifact.mjs branding "$ROOT/branding.patch"
 node "$ROOT/apply-branding.mjs" "$SOURCE"
 node "$ROOT/apply-hosted-scope.mjs" "$SOURCE"
 node "$ROOT/test-hosted-boot.mjs" "$SOURCE"
+node --test "$ROOT/../lib/atlas-voice/token.test.js"
 cp "$ROOT/vite.visual.config.mjs" "$SOURCE/vite.visual.config.mjs"
 
 (

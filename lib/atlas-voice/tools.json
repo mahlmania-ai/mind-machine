@@ -1,0 +1,424 @@
+[
+  {
+    "type": "function",
+    "name": "fly_to_location",
+    "description": "Fly the God's Eye View camera to a known city, geocoded country/region/city/landmark, or explicit WGS84 coordinate. Countries/cities frame the whole place; landmarks/buildings use close framing.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "locationId": {
+          "type": "string",
+          "enum": [
+            "austin",
+            "sf",
+            "nyc",
+            "tokyo",
+            "london",
+            "paris",
+            "dubai",
+            "dc"
+          ],
+          "description": "Known city preset ID. Use when the requested place matches one of these cities."
+        },
+        "query": {
+          "type": "string",
+          "description": "Plain place search query, e.g. \"London\", \"Eiffel Tower\", or \"Dubai Marina\". \"pointer\" = the spot under the cursor.",
+          "maxLength": 160
+        },
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "viewMode": {
+          "type": "string",
+          "enum": [
+            "close",
+            "overview"
+          ],
+          "description": "Optional framing intent. Usually omit this; GEV infers whole-place framing for countries/cities and close framing for landmarks."
+        },
+        "rangeM": {
+          "type": "number",
+          "minimum": 100,
+          "maximum": 20000000,
+          "description": "Optional camera range from the target in meters. Omit it for automatic whole-country/whole-city or close-landmark framing; provide it only when the user explicitly requests a numeric height or distance."
+        },
+        "waitForArrival": {
+          "type": "boolean",
+          "description": "Set true when a later tool depends on the destination viewport. The result then waits for the camera flight and returns arrived=true; cancellation returns ok=false."
+        },
+        "referent": {
+          "type": "integer",
+          "description": "Numbered item n from the last result list."
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "adjust_camera_zoom",
+    "description": "Move the current Cesium camera closer to or farther from what it is presently looking at. Use for relative zoom requests without changing location.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "direction": {
+          "type": "string",
+          "enum": [
+            "in",
+            "out"
+          ]
+        },
+        "amount": {
+          "type": "string",
+          "enum": [
+            "little",
+            "medium",
+            "lot"
+          ],
+          "description": "Use little for phrases like \"a bit\" or \"a little\", medium for ordinary zoom requests, and lot for \"way out/in\"."
+        }
+      },
+      "required": [
+        "direction",
+        "amount"
+      ]
+    }
+  },
+  {
+    "type": "function",
+    "name": "zoom_to_globe",
+    "description": "Pull the camera out to an ABSOLUTE full-Earth globe view (~18,000 km altitude, the whole planet in frame), keeping the current region centered. Use for \"globe view\", \"whole earth\", \"see the planet\", \"zoom all the way out\". Never use adjust_camera_zoom for these — its relative steps cannot reach the globe.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    }
+  },
+  {
+    "type": "function",
+    "name": "set_layer_visibility",
+    "description": "Enable or disable one God's Eye View data layer. Every shipped layer is in the enum; never tell the user a listed layer does not exist.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "layerId": {
+          "type": "string",
+          "description": "Spoken names: navigation integrity→gnss-integrity;nautical charts→sea-marks;ski slopes/ski runs→ski-pistes;my receiver→local-adsb;ships→ais-live-vessels;fires/wildfires→local-firms;wildfire perimeters→fire-perimeters;hurricanes→weather-cyclones;clouds→weather-satellite;lightning strikes→weather-lightning;aqhi→air-quality;buses/trains→transit;traffic cameras/cameras→cctv;flock cameras/license plate readers→alpr-cameras;street-level imagery→street-level;recent satellite imagery→recent-imagery;military bases/bases→military-installations;undersea cables→telegeography-submarine-cables;map search results→osm-places.",
+          "enum": [
+            "telegeography-submarine-cables",
+            "earthquakes",
+            "weather-radar",
+            "weather-satellite",
+            "weather-lightning"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "layerId",
+        "enabled"
+      ]
+    }
+  },
+  {
+    "type": "function",
+    "name": "show_data_layers_menu",
+    "description": "Open the data layers dropdown/menu and optionally scroll to a specific layer row without toggling it.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "layerId": {
+          "type": "string",
+          "enum": [
+            "telegeography-submarine-cables",
+            "earthquakes",
+            "weather-radar",
+            "weather-satellite",
+            "weather-lightning"
+          ],
+          "description": "Optional layer row to scroll into view and highlight."
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "set_panel_open",
+    "description": "Visual Presets/styles/filters=control-panel; Scenes/saved scenes=scene-panel; Voice Settings=voice-settings; voice control/Preview=voice-preview; Provider Settings/API keys=provider-settings. Voice panels exit Cockpit directly.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "panelId": {
+          "type": "string",
+          "enum": [
+            "data-panel",
+            "location-bar",
+            "control-panel",
+            "utilities-panel",
+            "pp-toggles",
+            "global-context-panel",
+            "weather-panel",
+            "voice-settings",
+            "voice-preview"
+          ]
+        },
+        "open": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "panelId",
+        "open"
+      ]
+    }
+  },
+  {
+    "type": "function",
+    "name": "set_voice_inactivity_timeout",
+    "description": "Set the requested exact inactivity duration directly: integer minutes 1–60, 0=None. Report applied/persisted truthfully; an unsaved live change is not saved.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "minutes"
+      ]
+    }
+  },
+  {
+    "type": "function",
+    "name": "set_visual_style",
+    "description": "Set the active God's Eye View visual filter/style.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "style": {
+          "type": "string",
+          "enum": [
+            "normal",
+            "retro",
+            "surveillance",
+            "thermal",
+            "anime",
+            "noir"
+          ]
+        }
+      },
+      "required": [
+        "style"
+      ]
+    }
+  },
+  {
+    "type": "function",
+    "name": "get_entity_context",
+    "description": "Get current GEV scene context, including basemap/3D-tile target context, selected entity metadata if active, and entities currently visible in the camera view.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "selected",
+            "in_view",
+            "pointer"
+          ],
+          "description": "Use auto by default. selected returns the clicked/selected entity; in_view returns visible entities near the screen center; pointer returns what the cursor is on."
+        },
+        "referent": {
+          "type": "integer",
+          "description": "Numbered item n from the last result list."
+        },
+        "limit": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 12
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "get_current_view_state",
+    "description": "Read the current camera, style, Context, Cockpit, HUD, detection, map stack, post-processing, scene-playback, tracked-entity, and layer state before choosing another action. Tracked aircraft emergency status is a crowd-sourced transponder broadcast, not a confirmed incident: quote emergencyBroadcast and never infer a hijack or an incident ending from a code change.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    }
+  },
+  {
+    "type": "function",
+    "name": "set_hud",
+    "description": "Control the intelligence HUD overlay: visibility and/or layout variant.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "visible": {
+          "type": "string",
+          "enum": [
+            "on",
+            "off",
+            "auto"
+          ],
+          "description": "auto restores style-driven show/hide."
+        },
+        "layout": {
+          "type": "string",
+          "enum": [
+            "tactical",
+            "minimal",
+            "cyber"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "set_map_stack",
+    "description": "Switch the basemap/imagery stack (NOT the satellites data layer and NOT a visual style filter).",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "stack": {
+          "type": "string",
+          "enum": [
+            "esri-imagery",
+            "osm"
+          ],
+          "description": "photoreal = Google 3D. Use bing-aerial only when the user explicitly says \"Bing aerial\" — \"satellite(s)\" never means a basemap; only the explicit phrase \"Esri\" / \"Esri imagery\" means esri-imagery."
+        }
+      },
+      "required": [
+        "stack"
+      ]
+    }
+  },
+  {
+    "type": "function",
+    "name": "set_post_processing",
+    "description": "Control bloom and sharpen post-processing toggles and intensities.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bloom": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "intensityPct": {
+              "type": "number",
+              "description": "0-200 (UI percent)."
+            }
+          }
+        },
+        "sharpen": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "intensityPct": {
+              "type": "number",
+              "description": "0-100 (UI percent)."
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "clear_annotations",
+    "description": "Erase ALL map annotations previously drawn with annotate_map. Call this ONLY when the user EXPLICITLY asks to clear or reset the map. Annotations accumulate and persist across navigation and topic changes by design — never clear on your own initiative.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    }
+  },
+  {
+    "type": "function",
+    "name": "move_camera",
+    "description": "Direct the camera like a drone operator: orbit the current view target, pan, tilt, or rotate — one bounded nudge (mode=once) or continuous motion until stopped (mode=continuous). Continuous motion also stops on any manual camera input or when a navigation tool runs. Say the RESULTING state when confirming (\"Orbiting slowly\"). Globe rotation (rotate_globe) spins Earth right continuously by default; explicit direction, mode and speed take precedence. It checks fit and may refuse.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "motion": {
+          "type": "string",
+          "enum": [
+            "orbit",
+            "pan",
+            "tilt",
+            "rotate",
+            "rotate_globe",
+            "stop"
+          ]
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right",
+            "up",
+            "down"
+          ],
+          "description": "Pan/rotate/tilt steps; orbit/rotate_globe default right."
+        },
+        "speed": {
+          "type": "string",
+          "enum": [
+            "slow",
+            "normal",
+            "fast"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "once",
+            "continuous"
+          ],
+          "description": "once = bounded eased nudge; continuous = until stop/manual input. rotate_globe defaults continuous; other motions default once."
+        },
+        "pitchDeg": {
+          "type": "number",
+          "description": "Absolute; -45 default, -89 top-down."
+        }
+      },
+      "required": [
+        "motion"
+      ]
+    }
+  }
+]
