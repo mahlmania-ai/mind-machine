@@ -22,3 +22,8 @@ for (const [slug, name] of Object.entries(rooms)) {
   await writeFile('dist/'+slug+'/index.html',page);
 }
 console.log('Verified page entry points:',Object.keys(rooms).join(', '));
+
+const founderUrl = 'https://mahlmania-founder-os.vercel.app/';
+await mkdir('dist/founder-os', { recursive: true });
+// Static hosts can serve the same entry when platform redirects are unavailable.
+await writeFile('dist/founder-os/index.html', '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url='+founderUrl+'"><title>Founder OS | Mahlmania.ai</title></head><body><main><h1>Founder OS</h1><p><a href="'+founderUrl+'">Open the Founder OS workspace</a></p></main></body></html>');
