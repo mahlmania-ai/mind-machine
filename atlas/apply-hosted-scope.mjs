@@ -24,5 +24,8 @@ await edit('src/standalone/tools.js', [
   ["      supportedProviders: ['openai', 'gemini'],\n      panel: true,\n", ''],
   ['      ...options?.voice,', '      ...options?.voice,\n      supportedProviders: [],\n      panel: false,'],
 ]);
+await edit('src/ui/applicationShell.js', [
+  ['    const receiver = this.services.localAdsbLayer?.receiver;', '    // Hosted Atlas does not bind local hardware receiver controls.\n    const receiver = null;'],
+]);
 await fs.copyFile(path.join(root, 'hostedScope.js'), path.join(source, 'src/standalone/hostedScope.js'));
 console.log('Applied hosted civil catalog, unavailable-source guards and required Data Library catalog.');
