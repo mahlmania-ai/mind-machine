@@ -74,7 +74,6 @@ export default function App() {
   const [menu, setMenu] = useState(false);
   const [briefOpen, setBriefOpen] = useState(false);
   const [draft, setDraft] = useState('');
-  const marketButton = useRef<HTMLButtonElement>(null);
   const selectProject = useCallback((id: string) => { setActive(id); setMenu(false); }, []);
   const openBrief = () => { setBriefOpen(true); setMenu(false); };
   const selected = ideas.find(idea => idea.id === selectedIdea)!;
@@ -98,14 +97,15 @@ export default function App() {
     <header className="v3-header">
       <a className="v3-wordmark" href="#home" aria-label="Mahlmania home">mahlmania.ai</a>
       <nav id="main-navigation" className={`v3-nav ${menu ? 'is-open' : ''}`} aria-label="Main navigation">
-        <a href="#home" onClick={() => setMenu(false)}>Explore</a>
+        <a href="/explore/" onClick={() => setMenu(false)}>All screens</a>
         <a href="/atlas/?welcome=0" onClick={() => setMenu(false)}>Atlas</a>
-        <a href="#work" onClick={() => setMenu(false)}>Work</a>
-        <a href="#approach" onClick={() => setMenu(false)}>Services</a>
-        <button onClick={() => selectProject('floor')}>The Floor</button>
+        <a href="/machine/">Machine</a>
+        <a href="/work/">Work</a>
+        <a href="/services/">Services</a>
+        <a href="/floor/">The Floor</a>
       </nav>
       <button className="v3-start" onClick={openBrief}>Start a project</button>
-      <button className="v3-chat" onClick={openBrief} aria-label="Talk about a project"><ChatIcon /></button>
+      <a className="v3-chat" href="/guide/" aria-label="Open the site guide"><ChatIcon /></a>
       <button className="v3-menu" onClick={() => setMenu(!menu)} aria-expanded={menu} aria-controls="main-navigation">{menu ? 'Close' : 'Menu'} <span aria-hidden="true">{menu ? '−' : '+'}</span></button>
     </header>
 
@@ -115,15 +115,15 @@ export default function App() {
         <div className="v3-copy">
           <h1 id="hero-title"><AnimatedText text="Mind +" tag="span" textAlign="left" trigger="load" effect="fade" delay={20} duration={.55} disabled={!moving} /><br/>Machine.</h1>
           <p>A universe of ideas. Built into reality.</p>
-          <div className="v3-actions"><button className="v3-primary" onClick={() => { setSelectedIdea('markets'); marketButton.current?.focus({ preventScroll: true }); }}>Explore the ideas <span aria-hidden="true">→</span></button><button className="v3-secondary" onClick={openBrief}>Work with me</button></div>
+          <div className="v3-actions"><a className="v3-primary" href="/explore/">Explore the screens <span aria-hidden="true">→</span></a><button className="v3-secondary" onClick={openBrief}>Work with me</button></div>
         </div>
         <div className="idea-nodes" role="group" aria-label="Explore ideas">
-          {ideas.map(idea => <button key={idea.id} ref={idea.id === 'markets' ? marketButton : undefined} className={`idea-node idea-${idea.id} ${selectedIdea === idea.id ? 'is-selected' : ''}`} onClick={() => setSelectedIdea(idea.id)} aria-pressed={selectedIdea === idea.id} aria-controls="idea-preview"><span className="idea-orb" aria-hidden="true"/>{idea.label}</button>)}
+          {ideas.map(idea => <button key={idea.id} className={`idea-node idea-${idea.id} ${selectedIdea === idea.id ? 'is-selected' : ''}`} onClick={() => setSelectedIdea(idea.id)} aria-pressed={selectedIdea === idea.id} aria-controls="idea-preview"><span className="idea-orb" aria-hidden="true"/>{idea.label}</button>)}
         </div>
         {selectedIdea === 'history' && <svg className="idea-trace" width="100%" height="100%" aria-hidden="true"><line x1="100%" y1="0" x2="0" y2="100%"/><circle cx="0" cy="100%" r="5"/></svg>}
         <article id="idea-preview" className={`idea-preview preview-${selectedIdea}`} aria-live="polite" aria-atomic="true">
           <img className="idea-thumbnail" src={selectedIdea === 'history' ? '/history-preview.jpg' : '/eden.jpg'} alt={selectedIdea === 'history' ? 'Illustrative interior from the creative concept' : 'Illustrated cosmic garden concept'} />
-          <div className="idea-preview-copy"><h2>{selected.title}</h2><p>{selected.subtitle}</p><button className="v3-primary" onClick={() => selectProject(selected.project)}>Explore project <Arrow /></button></div>
+          <div className="idea-preview-copy"><h2>{selected.title}</h2><p>{selected.subtitle}</p><a className="v3-primary" href={'/'+selected.id+'/'}>Explore project <Arrow /></a></div>
         </article>
         <form className="idea-brief" onSubmit={submitIdea}>
           <ChatIcon /><label className="sr-only" htmlFor="idea-draft">What are you imagining?</label><input id="idea-draft" value={draft} onChange={e => setDraft(e.target.value)} placeholder="What are you imagining?" autoComplete="off" /><button type="submit" aria-label="Shape your project brief"><span aria-hidden="true">→</span></button>
@@ -148,9 +148,9 @@ export default function App() {
         ].map(([n, title, description]) => <article key={n}><span className="service-number">{n}</span><div><h3>{title}</h3><p>{description}</p></div><span className="service-plus" aria-hidden="true">+</span></article>)}</div>
       </section>
 
-      <section className="floor-section section-wrap" aria-labelledby="floor-title"><div><p className="eyebrow">ON THE HORIZON / CHICAGO</p><h2 id="floor-title">A floor full<br/>of <em>possibility.</em></h2></div><div className="floor-copy"><p>A vision for the Chicago Board of Trade. Markets, founders, technology, media, and a community of people making things happen.</p><button className="button outline" onClick={() => selectProject('floor')}>Explore The Floor <Arrow /></button><span className="concept-label">A vision in development</span></div><div className="floor-lines" aria-hidden="true"/></section>
+      <section className="floor-section section-wrap" aria-labelledby="floor-title"><div><p className="eyebrow">ON THE HORIZON / CHICAGO</p><h2 id="floor-title">A floor full<br/>of <em>possibility.</em></h2></div><div className="floor-copy"><p>A vision for the Chicago Board of Trade. Markets, founders, technology, media, and a community of people making things happen.</p><a className="button outline" href="/floor/">Explore The Floor <Arrow /></a><span className="concept-label">A vision in development</span></div><div className="floor-lines" aria-hidden="true"/></section>
     </main>
-    <footer className="site-footer section-wrap"><a className="wordmark" href="#home">mahlmania<span className="wordmark-ai">.ai</span></a><p>Mind, meet possibility.</p><a href="mailto:chris@mahlmania.ai">chris@mahlmania.ai <Arrow /></a><div className="footer-bottom"><span>© {new Date().getFullYear()} Chris Mahlmann</span><a href="/THIRD-PARTY-NOTICES.txt">Credits</a><a href="#home">Back to the garden ↑</a></div></footer>
+    <footer className="site-footer section-wrap"><a className="wordmark" href="#home">mahlmania<span className="wordmark-ai">.ai</span></a><p>Mind, meet possibility.</p><a href="mailto:chris@mahlmania.ai">chris@mahlmania.ai <Arrow /></a><div className="footer-bottom"><span>© {new Date().getFullYear()} Chris Mahlmann</span><a href="/explore/">All screens</a><a href="/about/">About & contact</a><a href="/THIRD-PARTY-NOTICES.txt">Credits</a><a href="#home">Back to the garden ↑</a></div></footer>
     <ProjectDialog project={projects.find(p => p.id === active) || null} onClose={() => setActive(null)} />
     <BriefDialog open={briefOpen} draft={draft} onDraftChange={setDraft} onClose={() => setBriefOpen(false)} />
   </div>;

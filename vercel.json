@@ -92,5 +92,12 @@
     "api/realtime/token.js": {
       "maxDuration": 20
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/founder-os",
+      "destination": "https://mahlmania-founder-os.vercel.app/",
+      "permanent": false
+    }
+  ]
 }
