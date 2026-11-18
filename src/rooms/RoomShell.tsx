@@ -13,10 +13,11 @@ function RestoreAnchor(){
  },[]);
  return null;
 }
-const Eden=lazy(()=>import('./Integration').then(m=>({default:m.Eden})));
+const Eden=lazy(()=>import('./CreatorDesk'));
 const Conducting=lazy(()=>import('./Integration').then(m=>({default:m.Conducting})));
 const TradingReference=lazy(()=>import('./Integration').then(m=>({default:m.TradingReference})));
 const Terminal=lazy(()=>import('./Terminal'));
+const FloorLobby=lazy(()=>import('./FloorLobby'));
 function Room({slug}:{slug:string}){
  switch(slug){
   case 'eden':return <Eden/>;
@@ -25,7 +26,7 @@ function Room({slug}:{slug:string}){
   case 'explore':return <Explore/>;
   case 'machine':return <Machine/>;
   case 'markets':return new URLSearchParams(location.search).get('view')==='research'?<Markets/>:<Terminal/>;
-  case 'floor':return <Floor/>;
+  case 'floor':return new URLSearchParams(location.search).get('view')==='overview'?<Floor/>:<FloorLobby/>;
   case 'dashboard':return <Dashboard/>;
   case 'work':return <Work/>;
   case 'services':return <Services/>;

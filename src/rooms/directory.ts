@@ -6,7 +6,7 @@ export const screens: Screen[] = [
   { slug: 'floor', name: 'The Floor', group: 'Worlds', summary: 'Explore the proposed trading floor and incubator in Chicago.', keywords: 'chicago board of trade physical floor venue founders studios' },
   { slug: 'atlas', name: 'Atlas', group: 'Worlds', summary: 'Open the interactive globe in God’s Eye View.', keywords: 'atlas map globe geography earth cable flood imagery' },
   { slug:'compare', name:'Compare styles', group:'Studio', summary:'Apply two visual styles to the same screen.', keywords:'design fonts palette spacing compare' },
-  { slug:'eden', name:'Idea canvas', group:'Workspace', summary:'Arrange notes and connect project ideas on a board.', keywords:'eden board creative canvas notes' },
+  { slug:'eden', name:'Creator workspace', group:'Workspace', summary:'Browse creators, study posts, build lists and arrange ideas on a board.', keywords:'eden board creative canvas notes' },
   { slug:'conducting', name:'Machine teams', group:'Workspace', summary:'Explore a company team, its pilot and its workflow.', keywords:'conducting AI operations departments machinery' },
   { slug:'trading-reference', name:'Trading screen library', group:'Worlds', summary:'Inspect official tastytrade platform views.', keywords:'options chain curve positions orders tastytrade screen reference' },
   { slug: 'dashboard', name: 'My dashboard', group: 'Workspace', summary: 'Pin destinations and keep a short list of priorities.', keywords: 'private personal dashboard tasks notes favorites' },
