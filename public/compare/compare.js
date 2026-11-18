@@ -16,6 +16,12 @@ const accents={Ice:['#9fc6ff','#426c9f'],Lime:['#a3df68','#3b7239'],Ember:['#ff9
 for(const [name,v] of Object.entries(accents)){looks[name+' dark']=['#18191d','#222429','#ecf2fa',v[0],'#464850','Geist','Geist Mono'];looks[name+' light']=['#e9eaed','#f6f6f8','#1d1d1f',v[1],'#c3c7cc','Geist','Geist Mono']}
 const rooms={Markets:['markets',' .mt-desk','.mt-pane-header','.mt-pane-tabs'],Machine:['machine','.mt-machine-hero','.mt-vault-invitation'],Mind:['','.v3-hero','#work','#approach'],Explore:['explore','.mm-features','.mm-library'],Floor:['floor','.floor-cover','#program'],Dashboard:['dashboard','.mm-desk-layout','.mm-priority-form'],Work:['work','.folio-intro','.folio-index','#journal'],Services:['services','.folio-intro','#brief'],History:['history','.mm-story-layout','.mm-story-card'],Media:['media','.mm-story-layout','.mm-story-card'],Software:['software','.mm-software-list'],About:['about','.mm-about-grid'],Guide:['guide','.mm-priority-form','.mm-tabs']};
 if(live){rooms['Idea canvas']=['eden','.ix-eden'];rooms['Machine teams']=['conducting','.ix-teams'];rooms['Trading screen library']=['trading-reference','.ix-trading']}
+const tradingRooms = {
+ 'Desktop chart':'desktop-chart','Desktop analysis':'desktop-analysis','Desktop broadcast':'desktop-content','Desktop four-chart grid':'desktop-charts','Desktop options lesson':'desktop-learn',
+ 'Web options curve':'web-curve','Web backtesting':'web-backtest','Web Active Trader':'web-active','Web six-chart grid':'web-charts','Web AI search':'web-search','Web journal':'web-journal','Web fixed income':'web-bonds','Web options lesson':'web-learn',
+ 'Mobile positions':'mobile-positions','Mobile position management':'mobile-manage','Mobile product search':'mobile-products','Mobile news':'mobile-news','Mobile quote details':'mobile-quote'
+};
+if(live) for(const title of Object.keys(tradingRooms)) rooms[title]=['markets','.term'];
 const labels={' .mt-desk':'Research desk','.mt-pane-header':'Instrument header','.mt-pane-tabs':'Chart and research tabs','.v3-hero':'Garden entrance','.mt-machine-hero':'Vault entrance','.mt-vault-invitation':'Vault controls','#program':'Program diagram','#brief':'Brief form','#journal':'Journal'};
 function el(t,text){const e=document.createElement(t);if(text)e.textContent=text;return e}
 function select(parent,name,values,init){let l=el('label',name),s=el('select');l.append(s);parent.append(l);s.setAttribute('aria-label',name);for(let v of values)s.add(new Option(v,v));s.value=init;return s}
@@ -35,7 +41,7 @@ function pane(side,initial){const a=el('article'),b=el('div'),f=el('iframe'),wra
  if(factor!==1)spaces.forEach((v,i)=>{if(/^\d+(\.\d+)?px$/.test(v)&&parseFloat(v)>0)put(e,['padding-top','padding-right','padding-bottom','padding-left','row-gap','column-gap'][i],(parseFloat(v)*factor).toFixed(2)+'px')});
  }
  d.body.inert=true;await d.fonts.ready;if(rev!==revision)return;w.scrollTo({top:target.getBoundingClientRect().top+w.scrollY,behavior:'instant'});status.textContent=key+' · '+look.value+' · '+(font.value==='Style default'?(p?p[5]:'screen font'):font.value)+' · '+density.value.toLowerCase()+' spacing';const sample=target.querySelector('button,a,input')||target;const cs=w.getComputedStyle(sample);status.append(document.createTextNode(' · '+cs.fontSize+' type · '+cs.paddingLeft+' control inset'));a.dataset.ready=String(rev)
- };if(live){f.removeAttribute('srcdoc');f.src='/'+rooms[key][0]+(rooms[key][0]?'/':'')+'?design-preview='+rev}else f.srcdoc=doc(key)}
+ };if(live){f.removeAttribute('srcdoc');f.src='/'+rooms[key][0]+(rooms[key][0]?'/':'')+'?design-preview='+rev+(key==='Markets'?'&view=research':tradingRooms[key]?'&screen='+tradingRooms[key]:'')}else f.srcdoc=doc(key)}
  const ob=new ResizeObserver(()=>{const z=wrap.clientWidth/960;f.style.transform='scale('+z+')';wrap.style.height=680*z+'px'});ob.observe(wrap);for(let s of [look,font,density])s.onchange=draw;draw();return draw}
 let panels=[pane('Left','Screen original'),pane('Right','Monolith')];screen.onchange=()=>{sections();panels.forEach(f=>f())};section.onchange=()=>panels.forEach(f=>f());
 })();

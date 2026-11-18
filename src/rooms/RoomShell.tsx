@@ -16,6 +16,7 @@ function RestoreAnchor(){
 const Eden=lazy(()=>import('./Integration').then(m=>({default:m.Eden})));
 const Conducting=lazy(()=>import('./Integration').then(m=>({default:m.Conducting})));
 const TradingReference=lazy(()=>import('./Integration').then(m=>({default:m.TradingReference})));
+const Terminal=lazy(()=>import('./Terminal'));
 function Room({slug}:{slug:string}){
  switch(slug){
   case 'eden':return <Eden/>;
@@ -23,7 +24,7 @@ function Room({slug}:{slug:string}){
   case 'trading-reference':return <TradingReference/>;
   case 'explore':return <Explore/>;
   case 'machine':return <Machine/>;
-  case 'markets':return <Markets/>;
+  case 'markets':return new URLSearchParams(location.search).get('view')==='research'?<Markets/>:<Terminal/>;
   case 'floor':return <Floor/>;
   case 'dashboard':return <Dashboard/>;
   case 'work':return <Work/>;
