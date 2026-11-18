@@ -1,0 +1,4 @@
+.eden-scene { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; background:#02121a; }
+.eden-scene > img, .eden-scene > canvas { width:100%; height:100%; position:absolute; inset:0; display:block; }
+.eden-scene > canvas { opacity:0; }
+@media (max-width:800px) { .eden-scene > img { object-fit:cover; object-position:62% 46%; } }

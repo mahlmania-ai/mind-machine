@@ -1,0 +1,34 @@
+{
+  "revision": "9554d6ea71f7da548d31eb78d812b32f90e15a81",
+  "modifications": [
+    "Local imports flattened",
+    "Weather handler exported as property for serverless adapter",
+    "Whole-frame image cap lowered to4MiB for hosting response limit"
+  ],
+  "files": [
+    {
+      "file": "weather.js",
+      "upstream": "server/providers/weather.js",
+      "originalSha256": "315d150f75f487143de54e982dd0f0e4ca403f2a37e45d6de8f6c80042d62743",
+      "adaptedSha256": "4c195a304c877b4f25265c33ba05e7ef27fcce1c08766f1b45de12bb14b0a7cd"
+    },
+    {
+      "file": "httpBody.js",
+      "upstream": "src/sources/httpBody.js",
+      "originalSha256": "e486290915f80a6429419a3189ebbfff02f3d12b9e3406358060c04afa11c48d",
+      "adaptedSha256": "814f078ff91b14fa2f3de05e0d5f01f77fde9948bfb04377a8289e6c906fee79"
+    },
+    {
+      "file": "windBody.js",
+      "upstream": "src/sources/windBody.js",
+      "originalSha256": "ea3056c54e1c173dc28926949d095948d6f7a35ea40502079f4761d638f0e3e1",
+      "adaptedSha256": "3324c3c2407980d31ad28107fafc4e595e6a22ef33bfb8b109b8fa8823fe308a"
+    },
+    {
+      "file": "marker.js",
+      "upstream": "src/i18n/marker.js",
+      "originalSha256": "8b9c5d7a233d59205e7e74428bf5c8a6bd8e916a45737e44b199c02593199c41",
+      "adaptedSha256": "2428c44d6224d6181601fcde3fef1e52e68030432f0b85246504b7885d0d151a"
+    }
+  ]
+}

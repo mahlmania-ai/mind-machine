@@ -1,0 +1,89 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm ci --no-audit --no-fund",
+  "buildCommand": "npm run build:site",
+  "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/atlas/:path*",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/ https://tile.openstreetmap.org/ https://terrain.reearth.land/cesium-mesh/ellipsoid/ https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/ https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/; connect-src 'self' data: blob: https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/ https://tile.openstreetmap.org/ https://terrain.reearth.land/cesium-mesh/ellipsoid/ https://earthquake.usgs.gov/earthquakes/feed/ https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/ https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/; worker-src 'self' blob:; media-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/weather/manifest",
+      "destination": "/api/weather?atlasEndpoint=manifest"
+    },
+    {
+      "source": "/api/weather/image",
+      "destination": "/api/weather?atlasEndpoint=image"
+    },
+    {
+      "source": "/api/weather/tile",
+      "destination": "/api/weather?atlasEndpoint=tile"
+    },
+    {
+      "source": "/atlas",
+      "destination": "/atlas/index.html"
+    },
+    {
+      "source": "/logo.svg",
+      "destination": "/atlas/logo.svg"
+    },
+    {
+      "source": "/visual-presets.svg",
+      "destination": "/atlas/visual-presets.svg"
+    },
+    {
+      "source": "/location.svg",
+      "destination": "/atlas/location.svg"
+    },
+    {
+      "source": "/mic.svg",
+      "destination": "/atlas/mic.svg"
+    },
+    {
+      "source": "/pin.svg",
+      "destination": "/atlas/pin.svg"
+    },
+    {
+      "source": "/manifest.webmanifest",
+      "destination": "/atlas/manifest.webmanifest"
+    },
+    {
+      "source": "/icons/:path*",
+      "destination": "/atlas/icons/:path*"
+    },
+    {
+      "source": "/cesium/:path*",
+      "destination": "/atlas/cesium/:path*"
+    },
+    {
+      "source": "/events/:path*",
+      "destination": "/atlas/events/:path*"
+    },
+    {
+      "source": "/models/:path*",
+      "destination": "/atlas/models/:path*"
+    }
+  ],
+  "functions": {
+    "api/weather.js": {
+      "maxDuration": 30
+    }
+  }
+}

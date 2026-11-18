@@ -1,0 +1,82 @@
+diff --git a/index.html b/index.html
+index ded159f..1680542 100644
+--- a/index.html
++++ b/index.html
+@@ -3,7 +3,7 @@
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-  <title>God's Eye View</title>
++  <title>Atlas | Mahlmania.ai</title>
+   <!-- Raster fallbacks: Safari ignores an SVG apple-touch-icon and falls back to a
+        screenshot of the page, so an installed app needs a real PNG. Regenerate
+        these from the logo with `node scripts/generate-icons.mjs`. -->
+@@ -17,7 +17,7 @@
+   <meta name="mobile-web-app-capable" content="yes" />
+   <meta name="apple-mobile-web-app-capable" content="yes" />
+   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+-  <meta name="apple-mobile-web-app-title" content="God's Eye" />
++  <meta name="apple-mobile-web-app-title" content="Atlas" />
+   <link rel="stylesheet" href="/style.css" />
+   <link rel="preconnect" href="https://fonts.googleapis.com" />
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+@@ -45,7 +45,7 @@
+   <div id="loading-screen">
+     <div class="loader-content">
+       <span class="loader-logo brand-logo" data-logo-gaze data-logo-src="/logo.svg" aria-hidden="true"><img src="/logo.svg" alt="" /></span>
+-      <h2 translate="no">GOD'S EYE <span class="title-accent">VIEW</span></h2>
++      <h2 translate="no">MAHLMANIA<span class="title-accent">.AI</span></h2>
+       <p class="loader-status" data-i18n>Initializing photorealistic world...</p>
+     </div>
+   </div>
+diff --git a/public/manifest.webmanifest b/public/manifest.webmanifest
+index 478cd90..490fb79 100644
+--- a/public/manifest.webmanifest
++++ b/public/manifest.webmanifest
+@@ -1,7 +1,7 @@
+ {
+   "id": ".",
+-  "name": "God's Eye View",
+-  "short_name": "God's Eye",
++  "name": "Mahlmania.ai Atlas",
++  "short_name": "Atlas",
+   "description": "Live spatial intelligence in the browser.",
+   "start_url": ".",
+   "scope": ".",
+diff --git a/src/ui/frameRateView.test.mjs b/src/ui/frameRateView.test.mjs
+index 1b84641..e1045b6 100644
+--- a/src/ui/frameRateView.test.mjs
++++ b/src/ui/frameRateView.test.mjs
+@@ -78,5 +78,5 @@ test('the title heading keeps its own name beside the logo button', async (t) =>
+   const named = document.getElementById(
+     heading.getAttribute('aria-labelledby'),
+   );
+-  assert.equal(named.textContent.replace(/\s+/g, ' ').trim(), "GOD'S EYE VIEW");
++  assert.equal(named.textContent.replace(/\s+/g, ' ').trim(), "MAHLMANIA.AI");
+ });
+diff --git a/src/ui/views/SceneChromeView.vue b/src/ui/views/SceneChromeView.vue
+index b742ec0..da3e7a5 100644
+--- a/src/ui/views/SceneChromeView.vue
++++ b/src/ui/views/SceneChromeView.vue
+@@ -77,7 +77,7 @@ const vToastText = {
+   <!-- Title -->
+   <div id="title-bar">
+     <div class="title-glow"></div>
+-    <h1 aria-labelledby="title-wordmark"><button type="button" class="title-logo brand-logo" data-logo-gaze data-logo-src="/logo.svg" :aria-label="t('Back to live at the starting view')" :title="t('Back to live at the starting view')" @click="globeActions.act('home')"><img src="/logo.svg" alt="" /></button> <span id="title-wordmark" translate="no">GOD'S EYE <span class="title-accent">VIEW</span></span></h1>
++    <h1 aria-labelledby="title-wordmark"><button type="button" class="title-logo brand-logo" data-logo-gaze data-logo-src="/logo.svg" :aria-label="t('Back to live at the starting view')" :title="t('Back to live at the starting view')" @click="globeActions.act('home')"><img src="/logo.svg" alt="" /></button> <span id="title-wordmark" translate="no">MAHLMANIA<span class="title-accent">.AI</span></span></h1>
+     <p class="subtitle scene-text-holdout">{{ t('NO PLACE LEFT BEHIND') }}</p>
+     <div v-if="fps" class="frame-rate-readout scene-text-holdout" :hidden="!fps.visible" :title="t('Rendered globe frames per second · toggle with `')">{{ fps.text }}</div>
+   </div>
+diff --git a/src/ui/views/stories/StoriesHeader.vue b/src/ui/views/stories/StoriesHeader.vue
+index 412f845..e32fb4c 100644
+--- a/src/ui/views/stories/StoriesHeader.vue
++++ b/src/ui/views/stories/StoriesHeader.vue
+@@ -103,7 +103,7 @@ onBeforeUnmount(() => observer?.disconnect());
+             <use href="#gevLogo" />
+           </svg>
+         </button>
+-        <span class="h-word" translate="no">GOD'S EYE <b>VIEW</b></span>
++        <span class="h-word" translate="no">MAHLMANIA<b>.AI</b></span>
+       </div>
+       <nav ref="trail" class="h-tag s-trail" :aria-label="t('Breadcrumb')">
+         <template v-if="screen === 'explore'">

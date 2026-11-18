@@ -1,0 +1,32 @@
+{
+  "name": "mind-machine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "build:site": "npm run build && bash atlas/build-atlas.sh && node scripts/assemble-site.mjs"
+  },
+  "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "three": "0.187.0",
+    "@react-three/fiber": "9.8.2",
+    "@react-three/drei": "10.7.9",
+    "gsap": "3.15.1",
+    "@gsap/react": "2.1.2"
+  },
+  "devDependencies": {
+    "vite": "8.3.8",
+    "@vitejs/plugin-react": "6.3.0",
+    "typescript": "7.0.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.187.0"
+  },
+  "engines": {
+    "node": "24.x"
+  }
+}

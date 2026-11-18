@@ -1,0 +1,7 @@
+.atlas-build/
+dist/
+node_modules/
+.vercel/
+.env
+.env.*
+*.log
